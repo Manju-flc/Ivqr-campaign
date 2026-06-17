@@ -31,7 +31,7 @@ export default function App() {
           />
         )}
 
-        {page === "thankyou" && <ThankYou t={t} />}
+        {page === "thankyou" && <ThankYou language={language} />}
       </main>
     </div>
   );

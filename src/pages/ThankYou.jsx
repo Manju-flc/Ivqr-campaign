@@ -1,11 +1,18 @@
 import Layout from "../components/Layout";
 
-export default function ThankYou({ t }) {
+export default function ThankYou({ language }) {
   return (
-    <Layout>
-      <div className="thankyou">
-        <h1>{t.thanks}</h1>
-        <img src="/images/cow.png" className="cow-img" alt="" />
+    <Layout bgImage="/images/thankyou-bg.jpg">
+      <div className="thankyou-page">
+        <img
+          src={
+            language === "ar"
+              ? "/images/thankyou-text-ar.svg"
+              : "/images/thankyou-text-en.svg"
+          }
+          className="thankyou-text-img"
+          alt="Thank you"
+        />
       </div>
     </Layout>
   );

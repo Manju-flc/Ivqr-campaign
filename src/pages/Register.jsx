@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
+import { FiUpload } from "react-icons/fi";
 
 export default function Register({ t, language, goNext }) {
   const [form, setForm] = useState({
@@ -29,39 +30,72 @@ export default function Register({ t, language, goNext }) {
     goNext();
   };
 
+  const handleReceiptUpload = (e) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  setForm({
+    ...form,
+    receipt: file
+  });
+
+  if (
+    form.name &&
+    form.mobile &&
+    form.email
+  ) {
+    goNext();
+  } else {
+    alert("Please complete all fields");
+  }
+};
+
   return (
-    <Layout>
-      <form className="register-form" onSubmit={handleSubmit}>
-        <h1>{t.register}</h1>
-        <p>{t.description}</p>
-
-        <label>{t.name}</label>
-        <input name="name" value={form.name} onChange={handleChange} />
-
-        <label>{t.mobile}</label>
-        <input name="mobile" value={form.mobile} onChange={handleChange} />
-
-        <label>{t.email}</label>
-        <input
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
+    <Layout bgImage="/images/bg-home.jpg">
+      <form className="register-page" onSubmit={handleSubmit}>
+        <img
+          src={
+            language === "ar"
+              ? "/images/register-title-ar.svg"
+              : "/images/register-title-en.svg"
+          }
+          className="register-title-img"
+          alt="Register Now"
         />
 
-        <label className="upload-box">
+        {/* <p className="register-desc">{t.description}</p> */}
+
+        <div className="form-fields">
+          <label>{t.name}</label>
+          <input name="name" value={form.name} onChange={handleChange} />
+
+          <label>{t.mobile}</label>
+          <input name="mobile" value={form.mobile} onChange={handleChange} />
+
+          <label>{t.email}</label>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <img src="/images/cow.png" className="register-cow" alt="" />
+
+        <label className="receipt-upload-btn">
+          <FiUpload className="upload-icon" />
           {form.receipt ? form.receipt.name : t.upload}
           <input
             name="receipt"
             type="file"
             accept="image/*,.pdf"
-            onChange={handleChange}
+            onChange={handleReceiptUpload}
           />
         </label>
 
-        <button className="primary-btn form-btn" type="submit">
-          {t.submit}
-        </button>
+        <button className="hidden-submit" type="submit" />
       </form>
     </Layout>
   );
