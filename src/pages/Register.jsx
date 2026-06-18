@@ -103,14 +103,22 @@
 
 
 
-import { useState } from "react";
+import { useState, useRef  } from "react";
 import Layout from "../components/Layout";
 import { FiUpload } from "react-icons/fi";
 
+
 const CLOUDINARY_CLOUD_NAME = "da4ztxlh7";
 const CLOUDINARY_UPLOAD_PRESET = "ivqr_image";
+// const APPS_SCRIPT_URL =
+//   "https://script.google.com/macros/s/AKfycbxwcs_Q1fkVhqoZ7qohlzmqtO7_LGnG1-Lj1JsyKa3EVDNpyRDxx2vCAKbEUO21Rzz08w/exec";
+
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxwcs_Q1fkVhqoZ7qohlzmqtO7_LGnG1-Lj1JsyKa3EVDNpyRDxx2vCAKbEUO21Rzz08w/exec";
+  "https://script.google.com/macros/s/AKfycbyQq6EfIUPQCnB3mEoMj98Ss3WFa8_D38iVwDKJFU4zceBMkaFaqoMZokUpcu0OLb7T/exec";
+
+
+
+  
 
 async function compressImage(file) {
   return new Promise((resolve) => {
@@ -208,6 +216,7 @@ export default function Register({ t, language, goNext }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -216,7 +225,14 @@ export default function Register({ t, language, goNext }) {
       ...form,
       [name]: files ? files[0] : value
     });
+    if (name === "email") {
+    setError("");
+  }
   };
+
+  const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
   const handleReceiptUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -229,9 +245,22 @@ export default function Register({ t, language, goNext }) {
     });
 
     if (!form.name || !form.mobile || !form.nationalId || !form.email) {
-      alert("Please complete all fields before uploading receipt");
+      setError("Please complete all fields before uploading receipt");
+      if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
       return;
     }
+
+    if (!isValidEmail(form.email)) {
+  setError("Please enter a valid email address");
+
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+
+  return;
+}
 
     setLoading(true);
     setError("");
@@ -289,17 +318,23 @@ export default function Register({ t, language, goNext }) {
           />
 
           <label>{t.email}</label>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-          />
+<input
+  name="email"
+  type="email"
+  value={form.email}
+  onChange={handleChange}
+/>
+
+{error && (
+  <div className="field-error">
+    {error}
+  </div>
+)}
         </div>
 
         <img src="/images/cow.png" className="register-cow" alt="" />
 
-        {error && <p className="form-error">{error}</p>}
+        
 
         <label className={`receipt-upload-btn ${loading ? "disabled" : ""}`}>
           <FiUpload className="upload-icon" />
@@ -310,9 +345,13 @@ export default function Register({ t, language, goNext }) {
             : t.upload}
 
           <input
+            ref={fileInputRef}
             name="receipt"
             type="file"
             accept="image/*"
+            onClick={(e) => {
+    e.target.value = "";
+  }}
             onChange={handleReceiptUpload}
             disabled={loading}
           />
