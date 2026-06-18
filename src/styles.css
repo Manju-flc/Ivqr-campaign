@@ -248,7 +248,8 @@ body {
 
 .form-fields {
   position: absolute;
-  top: clamp(190px, 27dvh, 230px);
+  /* top: clamp(190px, 27dvh, 230px); */
+  top: clamp(165px, 23dvh, 205px);
   left: 22px;
   right: 22px;
   z-index: 4;
@@ -265,8 +266,10 @@ body {
 
 .form-fields input {
   width: 100%;
-  height: clamp(42px, 6dvh, 50px);
-  margin-bottom: clamp(12px, 2dvh, 18px);
+  /* height: clamp(42px, 6dvh, 50px);
+  margin-bottom: clamp(12px, 2dvh, 18px); */
+  height: clamp(38px, 5.2dvh, 44px);
+  margin-bottom: clamp(8px, 1.4dvh, 13px);
   padding: 8px 10px;
   border: 3px solid #111;
   background: #fff;
@@ -284,7 +287,7 @@ body {
   z-index: 2;
 }
 
-.receipt-upload-btn {
+/* .receipt-upload-btn {
   position: absolute;
   left: 50%;
   bottom: clamp(18px, 3dvh, 30px);
@@ -314,6 +317,47 @@ body {
 .upload-icon {
   font-size: 20px;
   line-height: 1;
+} */
+
+.receipt-upload-btn {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3dvh, 30px);
+  transform: translateX(-50%);
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: min(82%, 320px);
+  height: 56px;
+
+  border-radius: 999px;
+  background: #fff;
+  color: #e21b1b;
+
+  font-size: clamp(17px, 4.8vw, 22px);
+  font-weight: 900;
+  text-align: center;
+  cursor: pointer;
+
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+}
+
+.receipt-upload-btn input {
+  display: none;
+}
+
+.receipt-upload-btn.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.upload-icon {
+  font-size: 22px;
+  flex-shrink: 0;
 }
 
 .hidden-submit {

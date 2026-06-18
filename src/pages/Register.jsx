@@ -107,26 +107,26 @@ import { useState } from "react";
 import Layout from "../components/Layout";
 import { FiUpload } from "react-icons/fi";
 
-// ─── CONFIG ────────────────────────────────────────────────
-const CLOUDINARY_CLOUD_NAME = "da4ztxlh7";       // from Cloudinary dashboard
-const CLOUDINARY_UPLOAD_PRESET = "ivqr_image";   // from Settings → Upload presets
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwcs_Q1fkVhqoZ7qohlzmqtO7_LGnG1-Lj1JsyKa3EVDNpyRDxx2vCAKbEUO21Rzz08w/exec";   // from Google Apps Script deploy
-// ───────────────────────────────────────────────────────────
+const CLOUDINARY_CLOUD_NAME = "da4ztxlh7";
+const CLOUDINARY_UPLOAD_PRESET = "ivqr_image";
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxwcs_Q1fkVhqoZ7qohlzmqtO7_LGnG1-Lj1JsyKa3EVDNpyRDxx2vCAKbEUO21Rzz08w/exec";
 
-// Step 1: Compress image to under 300 KB
 async function compressImage(file) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
+
     reader.onload = (event) => {
       const img = new Image();
       img.src = event.target.result;
+
       img.onload = () => {
         const canvas = document.createElement("canvas");
         let { width, height } = img;
 
-        // Scale down large images
         const maxDimension = 1200;
+
         if (width > maxDimension || height > maxDimension) {
           if (width > height) {
             height = (height / width) * maxDimension;
@@ -139,16 +139,15 @@ async function compressImage(file) {
 
         canvas.width = width;
         canvas.height = height;
+
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Try 80% quality first
         canvas.toBlob(
           (blob) => {
             if (blob.size <= 300 * 1024) {
               resolve(new File([blob], file.name, { type: "image/jpeg" }));
             } else {
-              // Still too large → compress harder at 60%
               canvas.toBlob(
                 (blob2) => {
                   resolve(new File([blob2], file.name, { type: "image/jpeg" }));
@@ -166,26 +165,35 @@ async function compressImage(file) {
   });
 }
 
-// Step 2: Upload compressed image to Cloudinary
 async function uploadToCloudinary(file) {
   const formData = new FormData();
+
   formData.append("file", file);
   formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
   const res = await fetch(
     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-    { method: "POST", body: formData }
+    {
+      method: "POST",
+      body: formData
+    }
   );
+
   const data = await res.json();
   return data.secure_url;
 }
 
-// Step 3: Save to Google Sheets
-async function saveToGoogleSheets(name, mobile, email, receiptUrl) {
+async function saveToGoogleSheets(name, mobile, nationalId, email, receiptUrl) {
   await fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
-    body: JSON.stringify({ name, mobile, email, receipt_url: receiptUrl }),
+    body: JSON.stringify({
+      name,
+      mobile,
+      national_id: nationalId,
+      email,
+      receipt_url: receiptUrl
+    })
   });
 }
 
@@ -193,24 +201,34 @@ export default function Register({ t, language, goNext }) {
   const [form, setForm] = useState({
     name: "",
     mobile: "",
+    nationalId: "",
     email: "",
-    receipt: null,
+    receipt: null
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setForm({ ...form, [name]: files ? files[0] : value });
+
+    setForm({
+      ...form,
+      [name]: files ? files[0] : value
+    });
   };
 
   const handleReceiptUpload = async (e) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
-    setForm({ ...form, receipt: file });
+    setForm({
+      ...form,
+      receipt: file
+    });
 
-    if (!form.name || !form.mobile || !form.email) {
+    if (!form.name || !form.mobile || !form.nationalId || !form.email) {
       alert("Please complete all fields before uploading receipt");
       return;
     }
@@ -219,22 +237,21 @@ export default function Register({ t, language, goNext }) {
     setError("");
 
     try {
-      // 1. Compress
       const compressed = await compressImage(file);
 
-      // 2. Upload to Cloudinary
-      let receiptUrl = "upload_failed";
-      try {
-        receiptUrl = await uploadToCloudinary(compressed);
-      } catch (uploadErr) {
-        console.error("Cloudinary upload failed:", uploadErr);
-        receiptUrl = "upload_failed";
-      }
+      console.log("Original KB:", Math.round(file.size / 1024));
+      console.log("Compressed KB:", Math.round(compressed.size / 1024));
 
-      // 3. Save to Google Sheets (always runs even if upload failed)
-      await saveToGoogleSheets(form.name, form.mobile, form.email, receiptUrl);
+      const receiptUrl = await uploadToCloudinary(compressed);
 
-      // 4. Go to thank you
+      await saveToGoogleSheets(
+        form.name,
+        form.mobile,
+        form.nationalId,
+        form.email,
+        receiptUrl
+      );
+
       goNext();
     } catch (err) {
       console.error("Submission error:", err);
@@ -264,6 +281,13 @@ export default function Register({ t, language, goNext }) {
           <label>{t.mobile}</label>
           <input name="mobile" value={form.mobile} onChange={handleChange} />
 
+          <label>{t.nationalId || "NATIONAL ID"}</label>
+          <input
+            name="nationalId"
+            value={form.nationalId}
+            onChange={handleChange}
+          />
+
           <label>{t.email}</label>
           <input
             name="email"
@@ -275,11 +299,7 @@ export default function Register({ t, language, goNext }) {
 
         <img src="/images/cow.png" className="register-cow" alt="" />
 
-        {error && (
-          <p style={{ color: "red", fontSize: "12px", textAlign: "center" }}>
-            {error}
-          </p>
-        )}
+        {error && <p className="form-error">{error}</p>}
 
         <label className={`receipt-upload-btn ${loading ? "disabled" : ""}`}>
           <FiUpload className="upload-icon" />
@@ -288,10 +308,10 @@ export default function Register({ t, language, goNext }) {
             : form.receipt
             ? form.receipt.name
             : t.upload}
+
           <input
             name="receipt"
             type="file"
-            // accept="image/*,.pdf"
             accept="image/*"
             onChange={handleReceiptUpload}
             disabled={loading}
