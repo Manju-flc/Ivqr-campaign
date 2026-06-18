@@ -16,23 +16,14 @@ body,
   margin: 0;
 }
 
-/* body {
-  font-family: "GraphicSchool", sans-serif;
-  background: #f2f2f2;
-} */
+
 
 body {
   /* font-family: "GraphicSchool", sans-serif !important; */
   background: #f2f2f2;
 }
 
-/* .primary-btn,
-.home-start-btn,
-.register-form label,
-.register-desc,
-.receipt-upload-btn {
-  font-family: "Graphicschool", sans-serif;
-} */
+
 
 /* OUTER BROWSER AREA */
 
@@ -89,31 +80,7 @@ body {
   overflow: hidden;
 }
 
-/* .hero-section {
-  position: absolute;
-  top: clamp(6px, 1.5dvh, 14px);
-  left: 0;
-  right: 0;
-  z-index: 3;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.home-logo {
-  width: clamp(260px, 82vw, 340px);
-  height: auto;
-  margin: 0;
-  display: block;
-}
-
-.hero-text-img {
-  width: clamp(220px, 68vw, 270px);
-  height: auto;
-  margin-top: clamp(10px, 2dvh, 18px);
-  display: block;
-} */
 
 .hero-section {
   position: absolute;
@@ -133,12 +100,29 @@ body {
   display: block;
 }
 
-.hero-text-img {
+/* .hero-text-img {
   width: clamp(210px, 68vw, 280px);
   height: auto;
   margin-top: 8px;
   display: block;
   object-fit: contain;
+} */
+
+.hero-text-img {
+  height: auto;
+  margin-top: 8px;
+  display: block;
+  object-fit: contain;
+}
+
+/* English text smaller */
+.hero-text-en {
+  width: clamp(190px, 60vw, 245px);
+}
+
+/* Arabic text size */
+.hero-text-ar {
+  width: clamp(210px, 68vw, 280px);
 }
 
 /* BUTTON */
@@ -206,11 +190,7 @@ body {
   transform: translateX(1px);
 }
 
-/* .toggle-btn {
-  direction: ltr;
-} */
 
-/* REGISTER PAGE */
 
 /* REGISTER PAGE */
 
@@ -287,37 +267,7 @@ body {
   z-index: 2;
 }
 
-/* .receipt-upload-btn {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(18px, 3dvh, 30px);
-  transform: translateX(-50%);
-  z-index: 5;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  width: 88%;
-  max-width: 330px;
-  min-height: 42px;
-
-  color: #fff;
-  font-size: clamp(16px, 4.6vw, 20px);
-  font-weight: 900;
-  text-align: center;
-  cursor: pointer;
-}
-
-.receipt-upload-btn input {
-  display: none;
-}
-
-.upload-icon {
-  font-size: 20px;
-  line-height: 1;
-} */
 
 .receipt-upload-btn {
   position: absolute;
@@ -369,7 +319,7 @@ body {
   flex-shrink: 0;
 }
 
-/* THANK YOU PAGE */
+
 
 /* THANK YOU PAGE */
 
@@ -429,10 +379,22 @@ body {
     width: 235px;
   }
 
-  .hero-text-img {
+   .hero-text-en {
+    width: 185px;
+  }
+
+  .hero-text-ar {
     width: 220px;
+  }
+
+  .hero-text-img {
     margin-top: 6px;
   }
+
+  /* .hero-text-img {
+    width: 220px;
+    margin-top: 6px;
+  } */
 
   .home-start-btn {
     bottom: 72px;
@@ -509,10 +471,22 @@ body {
     width: 315px;
   }
 
-  .hero-text-img {
+  /* .hero-text-img {
     width: 260px;
     margin-top: 12px;
-  }
+  } */
+
+  .hero-text-en {
+  width: 250px;
+}
+
+.hero-text-ar {
+  width: 280px;
+}
+
+.hero-text-img {
+  margin-top: 12px;
+}
 
   .home-start-btn {
     bottom: 92px;
@@ -554,8 +528,20 @@ body {
     width: 220px;
   }
 
-  .hero-text-img {
+  /* .hero-text-img {
     width: 205px;
+    margin-top: 4px;
+  } */
+
+   .hero-text-en {
+    width: 175px;
+  }
+
+  .hero-text-ar {
+    width: 205px;
+  }
+
+  .hero-text-img {
     margin-top: 4px;
   }
 

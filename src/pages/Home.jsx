@@ -14,7 +14,8 @@ export default function Home({ t, language, setLanguage, goNext }) {
       ? "/images/hero-text-ar.svg"
       : "/images/hero-text-en.svg"
   }
-  className="hero-text-img"
+//   className="hero-text-img"
+className={`hero-text-img ${language === "ar" ? "hero-text-ar" : "hero-text-en"}`}
   alt="Campaign text"
 />
 </div>
