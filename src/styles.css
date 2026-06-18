@@ -69,7 +69,7 @@ body {
   overflow: hidden;
 }
 
-.hero-section {
+/* .hero-section {
   position: absolute;
   top: clamp(6px, 1.5dvh, 14px);
   left: 0;
@@ -93,6 +93,32 @@ body {
   height: auto;
   margin-top: clamp(10px, 2dvh, 18px);
   display: block;
+} */
+
+.hero-section {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-logo {
+  width: clamp(230px, 76vw, 320px);
+  height: auto;
+  display: block;
+}
+
+.hero-text-img {
+  width: clamp(210px, 68vw, 280px);
+  height: auto;
+  margin-top: 8px;
+  display: block;
+  object-fit: contain;
 }
 
 /* BUTTON */
@@ -336,21 +362,21 @@ body {
   }
 
   .home-logo {
-    width: 295px;
+    width: 235px;
   }
 
   .hero-text-img {
-    width: 280px;
-    margin-top: 8px;
+    width: 220px;
+    margin-top: 6px;
   }
 
   .home-start-btn {
-    bottom: 76px;
-    height: 54px;
+    bottom: 72px;
+    height: 52px;
   }
 
   .language-toggle {
-    bottom: 22px;
+    bottom: 20px;
   }
 
   .register-form input {
@@ -457,4 +483,24 @@ body {
 .receipt-upload-btn {
   bottom: 24px;
 }
+}
+
+@media (max-height: 700px) {
+  .home-logo {
+    width: 220px;
+  }
+
+  .hero-text-img {
+    width: 205px;
+    margin-top: 4px;
+  }
+
+  .home-start-btn {
+    bottom: 68px;
+    height: 50px;
+  }
+
+  .language-toggle {
+    bottom: 18px;
+  }
 }
