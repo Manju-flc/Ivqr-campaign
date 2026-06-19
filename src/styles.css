@@ -239,6 +239,7 @@ body {
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-fields input {
@@ -718,7 +719,7 @@ body {
 
 .terms-box {
   margin-top: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .terms-label {
@@ -728,35 +729,20 @@ body {
   color: #fff;
   font-size: 12px;
   font-weight: 800;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
-.terms-checkbox {
+.terms-checkbox,
+.terms-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   position: relative;
   top: 3px;
+  margin: 0;
 }
 
-.terms-label input {
-  width: 18px;
-  height: 18px;
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
-/* .terms-link {
-  border: none;
-  background: transparent;
-  padding: 0;
-  color: #ffeb3b;
-  font-size: inherit;
-  font-weight: 900;
-  text-decoration: underline;
-  cursor: pointer;
-} */
- .terms-link {
+.terms-link {
   border: none;
   background: transparent;
   padding: 0;
@@ -785,29 +771,56 @@ body {
   background: #fff;
   color: #111;
   border-radius: 18px;
-  padding: 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
 }
 
 .terms-modal h2 {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: #e21b1b;
   font-size: 22px;
   font-weight: 900;
   text-align: center;
+  line-height: 1.1;
 }
 
 .terms-content {
   overflow-y: auto;
   font-size: 13px;
-  line-height: 1.45;
-  white-space: pre-line;
+  line-height: 1.35;
   padding-right: 6px;
+  white-space: normal;
+}
+
+.terms-content p {
+  margin: 0 0 7px;
+}
+
+.terms-content strong {
+  font-weight: 900;
+  color: #111;
+}
+
+.terms-content p:has(strong) {
+  margin: 10px 0 5px;
+}
+
+.terms-content p:first-child {
+  margin-top: 0;
+}
+
+.terms-content ul {
+  margin: 4px 0 8px 18px;
+  padding: 0;
+}
+
+.terms-content li {
+  margin-bottom: 3px;
 }
 
 .terms-close-btn {
-  margin-top: 14px;
+  margin-top: 12px;
   height: 44px;
   border: none;
   border-radius: 999px;
@@ -827,6 +840,16 @@ body {
   text-align: right;
 }
 
+.terms-rtl .terms-content {
+  padding-right: 0;
+  padding-left: 6px;
+}
+
+.terms-rtl .terms-content ul {
+  margin-right: 18px;
+  margin-left: 0;
+}
+
 @media (max-width: 375px) {
   .terms-label {
     font-size: 11px;
@@ -834,5 +857,21 @@ body {
 
   .terms-modal {
     max-height: 84dvh;
+    padding: 14px;
   }
+
+  .terms-content {
+    font-size: 12px;
+    line-height: 1.32;
+  }
+}
+
+
+.terms-text {
+  text-transform: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 1px;
+  font-family: Arial, Helvetica, sans-serif;
 }

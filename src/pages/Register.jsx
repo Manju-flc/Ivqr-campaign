@@ -291,7 +291,7 @@ const handleReceiptUpload = async (e) => {
       </button>
     </span> */}
 
-    <span>
+    <span className="terms-text">
   {language === "ar" ? (
     <>
       لقد قرأتُ
@@ -358,9 +358,15 @@ const handleReceiptUpload = async (e) => {
     <div className={`terms-modal ${language === "ar" ? "terms-rtl" : ""}`}>
       <h2>{termsContent[language].title}</h2>
 
-      <div className="terms-content">
+      {/* <div className="terms-content">
         {termsContent[language].text}
-      </div>
+      </div> */}
+      <div
+  className="terms-content"
+  dangerouslySetInnerHTML={{
+    __html: termsContent[language].html
+  }}
+/>
 
       <button
         type="button"
