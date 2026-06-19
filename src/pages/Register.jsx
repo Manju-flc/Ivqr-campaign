@@ -1,6 +1,7 @@
 import { useState, useRef  } from "react";
 import Layout from "../components/Layout";
 import { FiUpload } from "react-icons/fi";
+import { termsContent } from "../data/terms";
 
 
 const CLOUDINARY_CLOUD_NAME = "da4ztxlh7";
@@ -111,6 +112,8 @@ export default function Register({ t, language, goNext }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -140,6 +143,17 @@ const validateForm = () => {
     setError("Please enter a valid email address");
     return false;
   }
+
+ 
+
+if (!acceptedTerms) {
+  setError(
+    language === "ar"
+      ? "يرجى الموافقة على الشروط والأحكام"
+      : "Please accept the Terms & Conditions"
+  );
+  return false;
+}
 
   setError("");
   return true;
@@ -202,7 +216,7 @@ const handleReceiptUpload = async (e) => {
   await submitForm(file);
 };
 
-  
+ 
 
   return (
     <Layout bgImage="/images/bg-home.jpg">
@@ -251,9 +265,63 @@ const handleReceiptUpload = async (e) => {
     {error}
   </div>
 )}
-        </div>
 
-        <img src="/images/cow.png" className="register-cow" alt="" />
+<div className="terms-box">
+  <label className="terms-label">
+    <input
+      type="checkbox"
+      checked={acceptedTerms}
+      onChange={(e) => {
+        setAcceptedTerms(e.target.checked);
+        setError("");
+      }}
+    />
+
+    {/* <span>
+      {language === "ar" ? "أوافق على " : "I agree to the "}
+      <button
+        type="button"
+        className="terms-link"
+        onClick={() => setShowTerms(true)}
+      >
+        {language === "ar"
+          ? "الشروط والأحكام"
+          : "Terms & Conditions"}
+      </button>
+    </span> */}
+
+    <span>
+  {language === "ar" ? (
+    <>
+      لقد قرأتُ
+      <button
+        type="button"
+        className="terms-link"
+        onClick={() => setShowTerms(true)}
+      >
+        الشروط والأحكام
+      </button>
+      وفهمتها وأوافق عليها.
+    </>
+  ) : (
+    <>
+      I have read, understood and agree to the
+      <button
+        type="button"
+        className="terms-link"
+        onClick={() => setShowTerms(true)}
+      >
+        Terms and Conditions
+      </button>
+      .
+    </>
+  )}
+</span>
+  </label>
+</div>
+</div>
+
+        {/* <img src="/images/cow.png" className="register-cow" alt="" /> */}
 
         <button
   type="button"
@@ -284,6 +352,25 @@ const handleReceiptUpload = async (e) => {
             disabled={loading}
           />
         </label>
+        {showTerms && (
+  <div className="terms-popup">
+    <div className={`terms-modal ${language === "ar" ? "terms-rtl" : ""}`}>
+      <h2>{termsContent[language].title}</h2>
+
+      <div className="terms-content">
+        {termsContent[language].text}
+      </div>
+
+      <button
+        type="button"
+        className="terms-close-btn"
+        onClick={() => setShowTerms(false)}
+      >
+        {language === "ar" ? "إغلاق" : "Close"}
+      </button>
+    </div>
+  </div>
+)}
       </form>
     </Layout>
   );
