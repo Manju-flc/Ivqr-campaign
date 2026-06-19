@@ -84,13 +84,14 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-async function saveToGoogleSheets(name, mobile, nationalId, email, receiptUrl) {
+async function saveToGoogleSheets(name, mobile, city, nationalId, email, receiptUrl) {
   await fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     body: JSON.stringify({
       name,
       mobile,
+      city,
       national_id: nationalId,
       email,
       receipt_url: receiptUrl
@@ -102,6 +103,7 @@ export default function Register({ t, language, goNext }) {
   const [form, setForm] = useState({
     name: "",
     mobile: "",
+    city: "",
     nationalId: "",
     email: "",
     receipt: null
@@ -129,7 +131,7 @@ export default function Register({ t, language, goNext }) {
 
 
 const validateForm = () => {
-  if (!form.name || !form.mobile || !form.nationalId || !form.email) {
+  if (!form.name || !form.mobile || !form.city || !form.nationalId || !form.email) {
     setError("Please complete all fields");
     return false;
   }
@@ -169,6 +171,7 @@ const submitForm = async (file = null) => {
     await saveToGoogleSheets(
       form.name,
       form.mobile,
+      form.city,
       form.nationalId,
       form.email,
       receiptUrl
@@ -220,6 +223,13 @@ const handleReceiptUpload = async (e) => {
 
           <label>{t.mobile}</label>
           <input name="mobile" value={form.mobile} onChange={handleChange} />
+
+          <label>{t.city || "CITY"}</label>
+<input
+  name="city"
+  value={form.city}
+  onChange={handleChange}
+/>
 
           <label>{t.nationalId || "NATIONAL ID"}</label>
           <input
