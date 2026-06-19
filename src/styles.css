@@ -109,7 +109,7 @@ body {
 }
 
 .hero-text-en {
-  width: clamp(200px, 65vw, 260px);
+  width: clamp(180px, 65vw, 250px);
 }
 
 .hero-text-ar {
@@ -575,7 +575,7 @@ body {
   }
 
   .hero-text-img {
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   .home-bottom {
