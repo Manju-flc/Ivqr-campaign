@@ -270,6 +270,7 @@ const handleReceiptUpload = async (e) => {
   <label className="terms-label">
     <input
       type="checkbox"
+      className="terms-checkbox"
       checked={acceptedTerms}
       onChange={(e) => {
         setAcceptedTerms(e.target.checked);

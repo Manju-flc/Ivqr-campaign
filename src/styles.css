@@ -731,6 +731,14 @@ body {
   line-height: 1.4;
 }
 
+.terms-checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  position: relative;
+  top: 3px;
+}
+
 .terms-label input {
   width: 18px;
   height: 18px;
