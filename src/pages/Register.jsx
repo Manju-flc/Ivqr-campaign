@@ -1,108 +1,3 @@
-// import { useState } from "react";
-// import Layout from "../components/Layout";
-// import { FiUpload } from "react-icons/fi";
-
-// export default function Register({ t, language, goNext }) {
-//   const [form, setForm] = useState({
-//     name: "",
-//     mobile: "",
-//     email: "",
-//     receipt: null
-//   });
-
-//   const handleChange = (e) => {
-//     const { name, value, files } = e.target;
-
-//     setForm({
-//       ...form,
-//       [name]: files ? files[0] : value
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     console.log({
-//       ...form,
-//       language
-//     });
-
-//     goNext();
-//   };
-
-//   const handleReceiptUpload = (e) => {
-//   const file = e.target.files?.[0];
-
-//   if (!file) return;
-
-//   setForm({
-//     ...form,
-//     receipt: file
-//   });
-
-//   if (
-//     form.name &&
-//     form.mobile &&
-//     form.email
-//   ) {
-//     goNext();
-//   } else {
-//     alert("Please complete all fields");
-//   }
-// };
-
-//   return (
-//     <Layout bgImage="/images/bg-home.jpg">
-//       <form className="register-page" onSubmit={handleSubmit}>
-//         <img
-//           src={
-//             language === "ar"
-//               ? "/images/register-title-ar.svg"
-//               : "/images/register-title-en.svg"
-//           }
-//           className="register-title-img"
-//           alt="Register Now"
-//         />
-
-        
-
-//         <div className="form-fields">
-//           <label>{t.name}</label>
-//           <input name="name" value={form.name} onChange={handleChange} />
-
-//           <label>{t.mobile}</label>
-//           <input name="mobile" value={form.mobile} onChange={handleChange} />
-
-//           <label>{t.email}</label>
-//           <input
-//             name="email"
-//             type="email"
-//             value={form.email}
-//             onChange={handleChange}
-//           />
-//         </div>
-
-//         <img src="/images/cow.png" className="register-cow" alt="" />
-
-//         <label className="receipt-upload-btn">
-//           <FiUpload className="upload-icon" />
-//           {form.receipt ? form.receipt.name : t.upload}
-//           <input
-//             name="receipt"
-//             type="file"
-//             accept="image/*,.pdf"
-//             onChange={handleReceiptUpload}
-//           />
-//         </label>
-
-//         <button className="hidden-submit" type="submit" />
-//       </form>
-//     </Layout>
-//   );
-// }
-
-
-
 import { useState, useRef  } from "react";
 import Layout from "../components/Layout";
 import { FiUpload } from "react-icons/fi";
@@ -117,8 +12,6 @@ const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbyQq6EfIUPQCnB3mEoMj98Ss3WFa8_D38iVwDKJFU4zceBMkaFaqoMZokUpcu0OLb7T/exec";
 
 
-
-  
 
 async function compressImage(file) {
   return new Promise((resolve) => {
@@ -234,61 +127,79 @@ export default function Register({ t, language, goNext }) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
-  const handleReceiptUpload = async (e) => {
-    const file = e.target.files?.[0];
 
-    if (!file) return;
-
-    setForm({
-      ...form,
-      receipt: file
-    });
-
-    if (!form.name || !form.mobile || !form.nationalId || !form.email) {
-      setError("Please complete all fields before uploading receipt");
-      if (fileInputRef.current) {
-    fileInputRef.current.value = "";
+const validateForm = () => {
+  if (!form.name || !form.mobile || !form.nationalId || !form.email) {
+    setError("Please complete all fields");
+    return false;
   }
-      return;
+
+  if (!isValidEmail(form.email)) {
+    setError("Please enter a valid email address");
+    return false;
+  }
+
+  setError("");
+  return true;
+};
+
+const submitForm = async (file = null) => {
+  if (!validateForm()) {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
-
-    if (!isValidEmail(form.email)) {
-  setError("Please enter a valid email address");
-
-  if (fileInputRef.current) {
-    fileInputRef.current.value = "";
+    return;
   }
 
-  return;
-}
+  setLoading(true);
+  setError("");
 
-    setLoading(true);
-    setError("");
+  try {
+    let receiptUrl = "";
 
-    try {
+    if (file) {
       const compressed = await compressImage(file);
 
       console.log("Original KB:", Math.round(file.size / 1024));
       console.log("Compressed KB:", Math.round(compressed.size / 1024));
 
-      const receiptUrl = await uploadToCloudinary(compressed);
-
-      await saveToGoogleSheets(
-        form.name,
-        form.mobile,
-        form.nationalId,
-        form.email,
-        receiptUrl
-      );
-
-      goNext();
-    } catch (err) {
-      console.error("Submission error:", err);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+      receiptUrl = await uploadToCloudinary(compressed);
     }
-  };
+
+    await saveToGoogleSheets(
+      form.name,
+      form.mobile,
+      form.nationalId,
+      form.email,
+      receiptUrl
+    );
+
+    goNext();
+  } catch (err) {
+    console.error("Submission error:", err);
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleNextClick = async () => {
+  await submitForm(null);
+};
+
+const handleReceiptUpload = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  setForm({
+    ...form,
+    receipt: file
+  });
+
+  await submitForm(file);
+};
+
+  
 
   return (
     <Layout bgImage="/images/bg-home.jpg">
@@ -334,7 +245,14 @@ export default function Register({ t, language, goNext }) {
 
         <img src="/images/cow.png" className="register-cow" alt="" />
 
-        
+        <button
+  type="button"
+  className={`next-btn ${loading ? "disabled" : ""}`}
+  onClick={handleNextClick}
+  disabled={loading}
+>
+  {loading ? "Submitting..." : t.next || "NEXT"}
+</button>
 
         <label className={`receipt-upload-btn ${loading ? "disabled" : ""}`}>
           <FiUpload className="upload-icon" />

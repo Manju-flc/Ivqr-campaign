@@ -8,6 +8,7 @@ export const translations = {
     mobile: "MOBILE NUMBER",
     nationalId: "NATIONAL ID",
     email: "EMAIL ID",
+    next: "NEXT",
     upload: "UPLOAD RECEIPT",
     submit: "SUBMIT",
     thanks: "THANKS FOR ENTERING!"
@@ -21,6 +22,7 @@ export const translations = {
     mobile: "رقم الهاتف",
     nationalId: "الرقم الوطني",
     email: "البريد الإلكتروني",
+    next: "التالي",
     upload: "حمّل الإيصال",
     submit: "إرسال",
     thanks: "شكراً لمشاركتك!"
